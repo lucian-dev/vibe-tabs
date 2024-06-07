@@ -1,0 +1,25 @@
+/* Specific styles for the popup */
+body {
+  width: 325px;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.container {
+  width: 100%;
+  max-width: 500px;
+  background-color: #ffffff;
+  padding: 25px 15px;
+  text-align: center;
+  position: relative;
+}
+
+header {
+  margin-bottom: 20px;
+}
+
+footer .secondary-button {
+  margin-top: 20px;
+}

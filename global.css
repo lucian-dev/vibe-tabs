@@ -1,0 +1,169 @@
+/* Global styles */
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #f5f5f5;
+  color: #4a4a4a;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  font-size: 24px;
+  color: #4a90e2;
+}
+
+.primary-button {
+  background-color: #4a90e2;
+  color: #ffffff;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.primary-button i {
+  margin-right: 8px;
+}
+
+.primary-button:hover {
+  background-color: #357abd;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Secondary button styles */
+.secondary-button {
+  background-color: #ffffff;
+  color: #4a90e2;
+  border: 1px solid #4a90e2;
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease,
+    color 0.3s ease, border-color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.secondary-button i {
+  margin-right: 8px;
+}
+
+.secondary-button:hover {
+  background-color: #f0f2f5;
+  color: #357abd;
+  border-color: #357abd;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mood-list {
+  margin: 20px 0;
+  text-align: left;
+}
+
+.mood-item {
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.mood-item.active-mood {
+  background-color: #4a90e2;
+  color: #ffffff;
+}
+
+/* Action Buttons Styles */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-button,
+.delete-button {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.edit-button:hover {
+  background-color: #e0e0e0;
+  border-color: #b0b0b0;
+}
+
+.delete-button:hover {
+  background-color: #e0e0e0;
+  border-color: #b0b0b0;
+}
+
+.deactivate-btn {
+  text-align: center;
+  margin: 20px auto 0;
+  font-size: 12px;
+  padding: 10px;
+}
+
+/* Footer styles */
+footer {
+  margin-top: 20px;
+}
+
+.footer {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.footer a {
+  color: #4a90e2;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.footer .signature {
+  margin-top: 25px;
+  color: #666666;
+  font-size: 12px;
+}
+
+.footer .signature a {
+  color: #4a90e2;
+  text-decoration: none;
+}
+
+.footer .signature a:hover {
+  text-decoration: underline;
+}
+
+/* No mood */
+.no-moods-message {
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.no-moods-message p {
+  margin: 10px 0;
+}

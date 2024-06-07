@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>What's your mood today?</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+    />
+    <link rel="stylesheet" href="../global.css" />
+    <link rel="stylesheet" href="welcome.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="background-overlay"></div>
+    <div class="container">
+      <header>
+        <img
+          src="../images/icon128.png"
+          alt="VibeTabs Logo"
+          class="logo"
+        />
+        <h1>What's your mood today?</h1>
+      </header>
+      <section class="introduction">
+        <p>
+          Customize your browsing experience with mood-based settings. Set
+          your mood for the day and let VibeTabs do the rest!
+        </p>
+      </section>
+      <section class="setup">
+        <button id="createMood" class="primary-button">
+          <i class="fas fa-plus"></i> Create New Mood
+        </button>
+        <div id="moodForm" class="mood-form" style="display: none">
+          <form id="moodCreationForm">
+            <div class="form-group">
+              <label for="moodName">Mood Name:</label>
+              <input type="text" id="moodName" name="moodName" required />
+            </div>
+            <div class="form-group">
+              <label for="tabUrls">Tabs (comma separated URLs):</label>
+              <input type="text" id="tabUrls" name="tabUrls" required />
+            </div>
+            <div class="form-group">
+              <label for="musicUrl">Background Music URL:</label>
+              <input type="url" id="musicUrl" name="musicUrl" />
+            </div>
+            <button type="submit" class="primary-button">
+              <i class="fas fa-save"></i> Save Mood
+            </button>
+          </form>
+        </div>
+        <div
+          id="existingMoods"
+          class="existing-moods"
+          style="display: none"
+        >
+          <p>You have already some moods?</p>
+          <a href="../options/options.html">Go to Settings</a>
+        </div>
+      </section>
+      <footer class="footer">
+        <p>
+          <a href="https://lucian-web.dev" target="_blank">Support</a> |
+          <a href="../options/options.html">Settings</a>
+        </p>
+        <p class="signature">
+          Created by
+          <a href="https://lucian-web.dev" target="_blank">Lucian-DEV</a>
+        </p>
+      </footer>
+    </div>
+    <script src="welcome.js"></script>
+  </body>
+</html>
