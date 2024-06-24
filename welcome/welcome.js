@@ -68,9 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Reset the form fields
         moodCreationForm.reset();
         // Redirect to the options page
-        window.location.href = chrome.runtime.getURL(
-          "options/options.html"
-        );
+        window.location.href = chrome.runtime.getURL("options/options.html");
       });
     });
   });

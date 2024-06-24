@@ -46,6 +46,13 @@ chrome.runtime.onInstalled.addListener(() => {
       periodInMinutes: 1440, // 24 hours
     });
   });
+
+  // Create context menu item
+  chrome.contextMenus.create({
+    id: "addToMood",
+    title: "Add to Mood",
+    contexts: ["page", "selection", "link"],
+  });
 });
 
 // Listener for the daily alarm to prompt the user
@@ -57,14 +64,25 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     chrome.storage.local.get("activeMood", (data) => {
       if (!data.activeMood) {
         // Show a notification to the user if no mood is active
-        showNotification(
-          "What's your mood today?",
-          "Click here to set your mood for the day!",
-          chrome.runtime.getURL("options/options.html")
-        );
+        showNotification("What's your mood today?", "Click here to set your mood for the day!", chrome.runtime.getURL("options/options.html"));
       } else {
         console.log("A mood is currently active. No notification needed.");
       }
+    });
+  }
+});
+
+// Listener for context menu click events
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === "addToMood") {
+    // Save the current tab information to local storage
+    chrome.storage.local.set({ tabToAdd: tab.url }, function () {
+      console.log("Tab URL saved to storage:", tab.url);
+      // Open mood selection page
+      chrome.tabs.create({
+        url: chrome.runtime.getURL("selected/moodSelect.html"),
+        active: true,
+      });
     });
   }
 });

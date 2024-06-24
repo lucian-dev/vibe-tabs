@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Select Mood</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" />
+    <link rel="stylesheet" href="../global.css" />
+    <link rel="stylesheet" href="moodSelect.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  </head>
+  <body>
+    <div class="background-overlay"></div>
+    <div class="container">
+      <header>
+        <img src="../images/icon128.png" alt="VibeTabs Logo" class="logo" />
+        <h1>Select Mood</h1>
+      </header>
+      <section id="moodList">
+        <!-- Mood items will be appended here -->
+      </section>
+      <div id="noMoodsMessage" style="display: none">
+        <p>You don't have any moods created.</p>
+        <a href="../welcome/welcome.html" class="primary-button"><i class="fas fa-plus"></i> Go create</a>
+      </div>
+    </div>
+    <script src="moodSelect.js"></script>
+  </body>
+</html>

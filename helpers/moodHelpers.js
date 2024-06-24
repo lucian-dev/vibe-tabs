@@ -18,14 +18,7 @@ export function sendNotification(title, message, url) {
 }
 
 // Function to display saved moods
-export function displayMoods(
-  moods,
-  container,
-  editCallback,
-  deleteCallback,
-  activateCallback,
-  activeMoodIndex
-) {
+export function displayMoods(moods, container, editCallback, deleteCallback, activateCallback, activeMoodIndex, showEditDelete = true) {
   container.innerHTML = ""; // Clear existing list
 
   if (moods.length === 0) {
@@ -49,12 +42,14 @@ export function displayMoods(
       <span>${mood.name}</span>
       <div class="action-buttons">
         ${
-          index !== activeMoodIndex
+          index === activeMoodIndex
+            ? "<span>Active Mood</span>"
+            : showEditDelete
             ? `
-          <button class="edit-button" data-index="${index}">Edit</button>
-          <button class="delete-button" data-index="${index}">Delete</button>
-        `
-            : "<span>Active Mood</span>"
+            <button class="edit-button" data-index="${index}">Edit</button>
+            <button class="delete-button" data-index="${index}">Delete</button>
+          `
+            : ""
         }
       </div>
     `;
@@ -63,24 +58,29 @@ export function displayMoods(
       if (activateCallback) activateCallback(index, moods);
     });
 
-    if (index !== activeMoodIndex) {
-      moodItem
-        .querySelector(".edit-button")
-        .addEventListener("click", (event) => {
-          event.stopPropagation();
-          if (editCallback) editCallback(index, moods);
-        });
+    if (showEditDelete && index !== activeMoodIndex) {
+      moodItem.querySelector(".edit-button").addEventListener("click", (event) => {
+        event.stopPropagation();
+        if (editCallback) editCallback(index, moods);
+      });
 
-      moodItem
-        .querySelector(".delete-button")
-        .addEventListener("click", (event) => {
-          event.stopPropagation();
-          if (deleteCallback) deleteCallback(index, moods);
-        });
+      moodItem.querySelector(".delete-button").addEventListener("click", (event) => {
+        event.stopPropagation();
+        if (deleteCallback) deleteCallback(index, moods);
+      });
     }
 
     container.appendChild(moodItem);
   });
+}
+
+// Function to create a new mood with updated tab structure
+export function createMood(name, tabs = [], music = "") {
+  return {
+    name,
+    tabs,
+    music,
+  };
 }
 
 // Function to activate a selected mood
@@ -96,11 +96,7 @@ export function activateMood(index, moods, callback) {
   // Check if the mood is already active
   chrome.storage.local.get("activeMoodIndex", function (data) {
     if (data.activeMoodIndex === index) {
-      sendNotification(
-        "Mood Already Active",
-        `${mood.name} mood is already active!`,
-        chrome.runtime.getURL("options/options.html")
-      );
+      sendNotification("Mood Already Active", `${mood.name} mood is already active!`, chrome.runtime.getURL("options/options.html"));
       return;
     }
     // Set the new active mood index
@@ -109,79 +105,66 @@ export function activateMood(index, moods, callback) {
     });
 
     // Get the current active tab
-    chrome.tabs.query(
-      { active: true, currentWindow: true },
-      function (tabs) {
-        const activeTab = tabs[0];
-        const activeTabId = activeTab.id;
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const activeTab = tabs[0];
+      const activeTabId = activeTab.id;
 
-        // Get all tabs in the current window
-        chrome.tabs.query({ currentWindow: true }, function (tabs) {
-          const tabIdsToClose = tabs
-            .filter((tab) => tab.id !== activeTab.id)
-            .map((tab) => tab.id);
+      // Get all tabs in the current window
+      chrome.tabs.query({ currentWindow: true }, function (tabs) {
+        const tabIdsToClose = tabs.filter((tab) => tab.id !== activeTab.id).map((tab) => tab.id);
 
-          // Close all tabs except the active one
-          chrome.tabs.remove(tabIdsToClose, function () {
-            // Open the mood tabs
-            mood.tabs.forEach((url, i) => {
-              chrome.tabs.create({ url, active: i === 0 }, function (tab) {
-                newTabIds.push(tab.id);
-              });
+        // Close all tabs except the active one
+        chrome.tabs.remove(tabIdsToClose, function () {
+          // Open the mood tabs
+          mood.tabs.forEach((tab, i) => {
+            const tabUrl = typeof tab === "object" ? tab.url : tab;
+            chrome.tabs.create({ url: tabUrl, active: i === 0 }, function (newTab) {
+              newTabIds.push(newTab.id);
             });
-
-            // Play background music if specified
-            if (mood.music) {
-              chrome.tabs.create({ url: mood.music, pinned: true });
-            }
-
-            // Focus back on the original active tab
-            chrome.tabs.update(activeTabId, { active: true });
-
-            // Send a notification to the background script
-            sendNotification(
-              "Mood Activated",
-              `${mood.name} mood activated!`,
-              chrome.runtime.getURL("options/options.html")
-            );
-
-            // Execute callback to refresh UI
-            if (callback) callback();
-
-            // Refresh the mood list in the popup
-            chrome.runtime.sendMessage({ type: "refreshMoods" });
           });
+
+          // Play background music if specified
+          if (mood.music) {
+            chrome.tabs.create({ url: mood.music, pinned: true });
+          }
+
+          // Focus back on the original active tab
+          chrome.tabs.update(activeTabId, { active: true });
+
+          // Send a notification to the background script
+          sendNotification("Mood Activated", `${mood.name} mood activated!`, chrome.runtime.getURL("options/options.html"));
+
+          // Execute callback to refresh UI
+          if (callback) callback();
+
+          // Refresh the mood list in the popup
+          chrome.runtime.sendMessage({ type: "refreshMoods" });
         });
-      }
-    );
+      });
+    });
   });
 }
 
 // Function to edit a selected mood
-export function editMood(index, moods, callback) {
-  if (!moods || !moods[index]) {
-    console.error("Moods array is undefined or index is out of bounds");
-    return;
-  }
+export function editMood(index, newMoodName, newTabUrls, newMusicUrl, callback) {
+  chrome.storage.local.get("moods", function (data) {
+    const moods = data.moods || [];
 
-  const mood = moods[index];
-  const newMoodName = prompt("Edit Mood Name:", mood.name);
-  const newTabUrls = prompt(
-    "Edit Tabs (comma separated URLs):",
-    mood.tabs.join(", ")
-  );
-  const newMusicUrl = prompt("Edit Background Music URL:", mood.music);
+    if (!moods || !moods[index]) {
+      console.error("Moods array is undefined or index is out of bounds");
+      return;
+    }
 
-  if (newMoodName && newTabUrls) {
     const formattedTabUrls = newTabUrls.split(",").map((url) => {
       url = url.trim();
       if (!/^https?:\/\//i.test(url)) {
-        return "https://" + url;
+        url = "https://" + url;
       }
       return url;
     });
 
     let formattedMusicUrl = newMusicUrl;
+
     if (newMusicUrl && !/^https?:\/\//i.test(newMusicUrl)) {
       formattedMusicUrl = "https://" + newMusicUrl;
     }
@@ -194,16 +177,12 @@ export function editMood(index, moods, callback) {
 
     chrome.storage.local.set({ moods: moods }, function () {
       // Send notification to the background script
-      sendNotification(
-        "Mood Updated",
-        `${newMoodName} mood updated!`,
-        chrome.runtime.getURL("options/options.html")
-      );
+      sendNotification("Mood Updated", `${newMoodName} mood updated!`, chrome.runtime.getURL("options/options.html"));
       if (callback) callback(); // Refresh the mood list
       // Send a message to refresh all instances
       chrome.runtime.sendMessage({ type: "refreshMoods" });
     });
-  }
+  });
 }
 
 // Function to delete a selected mood
@@ -217,11 +196,7 @@ export function deleteMood(index, moods, callback) {
     const deleteMood = moods.splice(index, 1)[0];
 
     chrome.storage.local.set({ moods: moods }, function () {
-      sendNotification(
-        "Mood Deleted",
-        `${deleteMood.name} mood deleted!`,
-        chrome.runtime.getURL("options/options.html")
-      );
+      sendNotification("Mood Deleted", `${deleteMood.name} mood deleted!`, chrome.runtime.getURL("options/options.html"));
       if (callback) callback(); // Refresh the mood list
       // Send a message to refresh all instances
       chrome.runtime.sendMessage({ type: "refreshMoods" });
@@ -239,16 +214,10 @@ export function deactivateMood(callback) {
         // Close all tabs except the active one
         chrome.tabs.query({ currentWindow: true }, function (tabs) {
           const activeTab = tabs.find((tab) => tab.active);
-          const tabIdsToClose = tabs
-            .filter((tab) => tab.id !== activeTab.id)
-            .map((tab) => tab.id);
+          const tabIdsToClose = tabs.filter((tab) => tab.id !== activeTab.id).map((tab) => tab.id);
           chrome.tabs.remove(tabIdsToClose, function () {
             // Send a notification
-            sendNotification(
-              "Mood Deactivated",
-              "No mood is currently active!",
-              chrome.runtime.getURL("options/options.html")
-            );
+            sendNotification("Mood Deactivated", "No mood is currently active!", chrome.runtime.getURL("options/options.html"));
 
             // Execute callback to refresh UI
             if (callback) callback();

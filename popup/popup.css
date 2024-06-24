@@ -8,12 +8,7 @@ body {
 }
 
 .container {
-  width: 100%;
-  max-width: 500px;
-  background-color: #ffffff;
   padding: 25px 15px;
-  text-align: center;
-  position: relative;
 }
 
 header {

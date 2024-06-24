@@ -1,10 +1,4 @@
-import {
-  displayMoods,
-  editMood,
-  deleteMood,
-  activateMood,
-  deactivateMood,
-} from "../helpers/moodHelpers.js";
+import { displayMoods, activateMood, deactivateMood } from "../helpers/moodHelpers.js";
 
 // Wait for the DOM to be fully loaded before executing the script
 document.addEventListener("DOMContentLoaded", function () {
@@ -15,30 +9,28 @@ document.addEventListener("DOMContentLoaded", function () {
   // Function to load and display moods
   function loadMoods() {
     // Retrieve saved moods from storage and active mood index from storage
-    chrome.storage.local.get(
-      ["moods", "activeMoodIndex"],
-      function (data) {
-        const moods = data.moods || [];
-        const activeMoodIndex = data.activeMoodIndex;
+    chrome.storage.local.get(["moods", "activeMoodIndex"], function (data) {
+      const moods = data.moods || [];
+      const activeMoodIndex = data.activeMoodIndex;
 
-        // Conditionally show the deactivate button
-        if (activeMoodIndex !== undefined) {
-          deactivateMoodButton.style.display = "block";
-        } else {
-          deactivateMoodButton.style.display = "none";
-        }
-
-        // Display moods using the helper function
-        displayMoods(
-          moods,
-          document.getElementById("moodList"),
-          (index, moods) => editMood(index, moods, loadMoods),
-          (index, moods) => deleteMood(index, moods, loadMoods),
-          (index, moods) => activateMood(index, moods, loadMoods),
-          activeMoodIndex
-        );
+      // Conditionally show the deactivate button
+      if (activeMoodIndex !== undefined) {
+        deactivateMoodButton.style.display = "block";
+      } else {
+        deactivateMoodButton.style.display = "none";
       }
-    );
+
+      // Display moods using the helper function
+      displayMoods(
+        moods,
+        document.getElementById("moodList"),
+        null, // No edit callback
+        null, // No delete callback
+        (index, moods) => activateMood(index, moods, loadMoods),
+        activeMoodIndex,
+        false
+      );
+    });
   }
 
   // Load moods when the popup is opened
@@ -64,11 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Listen for messages to refresh the mood list
-  chrome.runtime.onMessage.addListener(function (
-    message,
-    sender,
-    sendResponse
-  ) {
+  chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.type === "refreshMoods") {
       loadMoods();
     }
