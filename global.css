@@ -158,6 +158,10 @@ h2 {
   gap: 10px;
 }
 
+.action-buttons span {
+  font-size: 12px;
+}
+
 .edit-button,
 .delete-button {
   background-color: #ffffff;

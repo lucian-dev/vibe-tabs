@@ -49,7 +49,7 @@ export function displayMoods(moods, container, editCallback, deleteCallback, act
             <button class="edit-button" data-index="${index}">Edit</button>
             <button class="delete-button" data-index="${index}">Delete</button>
           `
-            : ""
+            : "<span>Not active</span>"
         }
       </div>
     `;
