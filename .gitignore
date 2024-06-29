@@ -7,3 +7,5 @@
 # Operating system files
 Thumbs.db
 Desktop.ini
+node_modules
+/styles/main.css
