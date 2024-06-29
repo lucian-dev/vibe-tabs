@@ -8,3 +8,5 @@
 Thumbs.db
 Desktop.ini
 node_modules
+/styles/main.css
+node_modules
