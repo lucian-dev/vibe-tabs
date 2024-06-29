@@ -1,0 +1,109 @@
+.ya-wrapper {
+  background-image: url("../../images/background.jpg");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 500px;
+  background-color: #ffffff;
+  padding: 25px 15px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+}
+
+// Buttons
+.primary-button {
+  background-color: #4a90e2;
+  color: #ffffff;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  appearance: none;
+  i {
+    margin-right: 8px;
+  }
+  &:hover {
+    background-color: #357abd;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* Secondary button styles */
+.secondary-button {
+  background-color: #ffffff;
+  color: #4a90e2;
+  border: 1px solid #4a90e2;
+  padding: 12px 20px;
+  font-size: 1.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  appearance: none;
+  i {
+    margin-right: 8px;
+  }
+  &:hover {
+    background-color: #f0f2f5;
+    color: #357abd;
+    border-color: #357abd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Action Buttons Styles */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  span {
+    font-size: 1.2rem;
+  }
+}
+
+.edit-button,
+.delete-button {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.edit-button:hover {
+  background-color: #e0e0e0;
+  border-color: #b0b0b0;
+}
+
+.delete-button:hover {
+  background-color: #e0e0e0;
+  border-color: #b0b0b0;
+}
+
+.deactivate-btn {
+  text-align: center;
+  margin: 20px auto 0;
+  font-size: 1.2rem;
+  padding: 10px;
+}
