@@ -63,12 +63,12 @@ document.addEventListener("DOMContentLoaded", function () {
           type: "showNotification",
           title: "Mood Saved",
           message: `${moodName} mood has been saved successfully!`,
-          url: chrome.runtime.getURL("options/options.html"),
+          url: chrome.runtime.getURL("src/options/options.html"),
         });
         // Reset the form fields
         moodCreationForm.reset();
         // Redirect to the options page
-        window.location.href = chrome.runtime.getURL("options/options.html");
+        window.location.href = chrome.runtime.getURL("src/options/options.html");
       });
     });
   });

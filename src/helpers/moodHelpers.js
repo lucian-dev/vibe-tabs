@@ -96,7 +96,7 @@ export function activateMood(index, moods, callback) {
   // Check if the mood is already active
   chrome.storage.local.get("activeMoodIndex", function (data) {
     if (data.activeMoodIndex === index) {
-      sendNotification("Mood Already Active", `${mood.name} mood is already active!`, chrome.runtime.getURL("options/options.html"));
+      sendNotification("Mood Already Active", `${mood.name} mood is already active!`, chrome.runtime.getURL("src/options/options.html"));
       return;
     }
     // Set the new active mood index
@@ -132,7 +132,7 @@ export function activateMood(index, moods, callback) {
           chrome.tabs.update(activeTabId, { active: true });
 
           // Send a notification to the background script
-          sendNotification("Mood Activated", `${mood.name} mood activated!`, chrome.runtime.getURL("options/options.html"));
+          sendNotification("Mood Activated", `${mood.name} mood activated!`, chrome.runtime.getURL("src/options/options.html"));
 
           // Execute callback to refresh UI
           if (callback) callback();
@@ -177,7 +177,7 @@ export function editMood(index, newMoodName, newTabUrls, newMusicUrl, callback) 
 
     chrome.storage.local.set({ moods: moods }, function () {
       // Send notification to the background script
-      sendNotification("Mood Updated", `${newMoodName} mood updated!`, chrome.runtime.getURL("options/options.html"));
+      sendNotification("Mood Updated", `${newMoodName} mood updated!`, chrome.runtime.getURL("src/options/options.html"));
       if (callback) callback(); // Refresh the mood list
       // Send a message to refresh all instances
       chrome.runtime.sendMessage({ type: "refreshMoods" });
@@ -196,7 +196,7 @@ export function deleteMood(index, moods, callback) {
     const deleteMood = moods.splice(index, 1)[0];
 
     chrome.storage.local.set({ moods: moods }, function () {
-      sendNotification("Mood Deleted", `${deleteMood.name} mood deleted!`, chrome.runtime.getURL("options/options.html"));
+      sendNotification("Mood Deleted", `${deleteMood.name} mood deleted!`, chrome.runtime.getURL("src/options/options.html"));
       if (callback) callback(); // Refresh the mood list
       // Send a message to refresh all instances
       chrome.runtime.sendMessage({ type: "refreshMoods" });
@@ -217,7 +217,7 @@ export function deactivateMood(callback) {
           const tabIdsToClose = tabs.filter((tab) => tab.id !== activeTab.id).map((tab) => tab.id);
           chrome.tabs.remove(tabIdsToClose, function () {
             // Send a notification
-            sendNotification("Mood Deactivated", "No mood is currently active!", chrome.runtime.getURL("options/options.html"));
+            sendNotification("Mood Deactivated", "No mood is currently active!", chrome.runtime.getURL("src/options/options.html"));
 
             // Execute callback to refresh UI
             if (callback) callback();

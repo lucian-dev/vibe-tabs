@@ -1,30 +1,30 @@
 {
   "manifest_version": 3,
   "name": "VibeTabs",
-  "version": "1.3",
-  "description": "Customize your browsing experience with mood-based settings, including tabs and background music.",
+  "version": "1.4",
+  "description": "Organize your browsing with mood-based setups, including custom tab groups and background music for enhanced productivity.",
   "permissions": ["storage", "activeTab", "alarms", "notifications", "contextMenus"],
   "host_permissions": ["http://*/*", "https://*/*"],
   "background": {
-    "service_worker": "background/background.js"
+    "service_worker": "src/background/background.js"
   },
   "action": {
-    "default_popup": "popup/popup.html",
+    "default_popup": "src/popup/popup.html",
     "default_icon": {
-      "16": "images/icon16.png",
-      "48": "images/icon48.png",
-      "128": "images/icon128.png"
+      "16": "assets/icons/icon16.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
     }
   },
   "icons": {
-    "16": "images/icon16.png",
-    "48": "images/icon48.png",
-    "128": "images/icon128.png"
+    "16": "assets/icons/icon16.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
   },
-  "options_page": "options/options.html",
+  "options_page": "src/options/options.html",
   "web_accessible_resources": [
     {
-      "resources": ["selected/moodSelect.html", "selected/moodSelect.js"],
+      "resources": ["src/selected/moodSelect.html", "src/selected/moodSelect.js"],
       "matches": ["<all_urls>"]
     }
   ]

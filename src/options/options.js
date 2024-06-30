@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Event listener to open the welcome page for creating a new mood
   createNewMoodButton.addEventListener("click", function () {
-    window.location.href = chrome.runtime.getURL("welcome/welcome.html");
+    window.location.href = chrome.runtime.getURL("src/welcome/welcome.html");
   });
 
   // Event listener to deactivate the active mood

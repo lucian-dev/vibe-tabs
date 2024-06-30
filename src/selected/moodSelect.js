@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
     okButton.className = "primary-button";
     okButton.addEventListener("click", function () {
       alertBox.remove();
-      window.location.href = chrome.runtime.getURL("options/options.html");
+      window.location.href = chrome.runtime.getURL("src/options/options.html");
     });
 
     alertBox.appendChild(okButton);

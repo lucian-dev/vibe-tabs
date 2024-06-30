@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Event listener to open the welcome page for creating a new mood
   createNewMoodButton.addEventListener("click", function () {
     chrome.tabs.create({
-      url: chrome.runtime.getURL("welcome/welcome.html"),
+      url: chrome.runtime.getURL("src/welcome/welcome.html"),
     });
   });
 

@@ -4,7 +4,7 @@ function showNotification(title, message, url) {
     "", // Notification ID (empty string generates a new ID)
     {
       type: "basic",
-      iconUrl: "/images/icon128.png",
+      iconUrl: "../../assets/icons/Icon128.png",
       title: title,
       message: message,
       priority: 2,
@@ -64,7 +64,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     chrome.storage.local.get("activeMood", (data) => {
       if (!data.activeMood) {
         // Show a notification to the user if no mood is active
-        showNotification("What's your mood today?", "Click here to set your mood for the day!", chrome.runtime.getURL("options/options.html"));
+        showNotification("What's your mood today?", "Click here to set your mood for the day!", chrome.runtime.getURL("src/options/options.html"));
       } else {
         console.log("A mood is currently active. No notification needed.");
       }
@@ -80,7 +80,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
       console.log("Tab URL saved to storage:", tab.url);
       // Open mood selection page
       chrome.tabs.create({
-        url: chrome.runtime.getURL("selected/moodSelect.html"),
+        url: chrome.runtime.getURL("src/selected/moodSelect.html"),
         active: true,
       });
     });

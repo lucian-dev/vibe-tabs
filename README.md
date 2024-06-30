@@ -1,6 +1,6 @@
 # VibeTabs
 
-**VibeTabs** optimizes your browsing experience with task-based setups, allowing you to set specific tabs and background music to match your current activity.
+**VibeTabs** Organize your browsing with mood-based setups, including custom tab groups and background music for enhanced productivity.
 
 ## Features
 
