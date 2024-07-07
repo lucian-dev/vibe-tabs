@@ -23,14 +23,19 @@
           <button id="createMood" class="primary-button"><i class="fas fa-plus"></i> Create New Mood</button>
           <div id="moodForm" class="mood-form" style="display: none">
             <form id="moodCreationForm">
+              <input type="hidden" id="moodId" name="moodId" />
               <div class="form-group">
                 <label for="moodName">Mood Name:</label>
                 <input type="text" id="moodName" name="moodName" required />
               </div>
               <div class="form-group">
-                <label for="tabUrls">Tabs (comma separated URLs):</label>
-                <input type="text" id="tabUrls" name="tabUrls" required />
+                <label for="tabUrl">Add Tab URL:</label>
+                <div class="row-tabs">
+                  <input type="url" id="tabUrl" name="tabUrl" />
+                  <button class="edit-button" type="button" id="addTabButton">Add Tab</button>
+                </div>
               </div>
+              <ul id="tabsList"></ul>
               <div class="form-group">
                 <label for="musicUrl">Background Music URL:</label>
                 <input type="url" id="musicUrl" name="musicUrl" />
@@ -57,6 +62,6 @@
         </footer>
       </div>
     </div>
-    <script src="welcome.js"></script>
+    <script type="module" src="welcome.js"></script>
   </body>
 </html>

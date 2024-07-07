@@ -24,14 +24,14 @@
 3. **Manage Moods**: Go to the options page to edit or delete your moods.
 4. **Add Tabs to Moods**:
    - Right-click on any page, link, or selection, and choose "Add to Mood" from the context menu.
-   - Select the mood you want to add the tab to from the mood selection page.
+   - Select the mood you want to add the tab to from the context menu.
 5. **Daily Prompts**: If no mood is active, you will receive a daily notification prompting you to set your mood for the day.
 
 ### Creating a New Mood
 
 1. **Open the Extension**: Click the VibeTabs icon in the Chrome toolbar.
 2. **Create New Mood**: Click the "Create New Mood" button.
-3. **Fill Out the Form**: Enter a name for the mood, add URLs for tabs (comma-separated), and optionally, a URL for background music.
+3. **Fill Out the Form**: Enter a name for the mood, add URLs for tabs individually, and optionally, a URL for background music.
 4. **Save the Mood**: Click "Save Mood" to store your new mood setup.
 
 ### Editing or Deleting Moods

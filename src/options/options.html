@@ -24,20 +24,25 @@
           <button id="deactivateMood" class="secondary-button deactivate-btn"><i class="fas fa-times"></i> Deactivate Mood</button>
         </footer>
       </div>
-      <!-- Edit Mood Modal -->
+      <!-- Edit/Create Mood Modal -->
       <div id="editMoodModal" class="modal" style="display: none">
         <div class="modal-content">
           <span class="close-button" id="closeModal">&times;</span>
-          <h2>Edit Mood</h2>
+          <h2 id="modalTitle">Edit Mood</h2>
           <form id="editMoodForm" class="edit-form">
+            <input type="hidden" id="moodId" name="moodId" />
             <div class="form-group">
               <label for="editMoodName">Mood Name:</label>
               <input type="text" id="editMoodName" name="editMoodName" required />
             </div>
             <div class="form-group">
-              <label for="editTabUrls">Tabs (comma separated URLs):</label>
-              <input type="text" id="editTabUrls" name="editTabUrls" required />
+              <label for="editTabUrl">Add Tab URL:</label>
+              <div class="row-tabs">
+                <input type="url" id="editTabUrl" name="editTabUrl" />
+                <button class="edit-button" type="button" id="addTabButton">Add Tab</button>
+              </div>
             </div>
+            <ul id="editTabsList"></ul>
             <div class="form-group">
               <label for="editMusicUrl">Background Music URL:</label>
               <input type="url" id="editMusicUrl" name="editMusicUrl" />

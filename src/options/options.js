@@ -1,4 +1,4 @@
-import { displayMoods, editMood, deleteMood, activateMood, deactivateMood } from "../helpers/moodHelpers.js";
+import { displayMoods, editMood, deleteMood, activateMood, deactivateMood, updateTabsList, handleTabActions } from "../helpers/moodHelpers.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   const createNewMoodButton = document.getElementById("createNewMood");
@@ -6,6 +6,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const editMoodModal = document.getElementById("editMoodModal");
   const closeModalButton = document.getElementById("closeModal");
   const editMoodForm = document.getElementById("editMoodForm");
+  const moodIdInput = document.getElementById("moodId");
+  const editMoodNameInput = document.getElementById("editMoodName");
+  const editMusicUrlInput = document.getElementById("editMusicUrl");
+  const editTabUrlInput = document.getElementById("editTabUrl");
+  const addTabButton = document.getElementById("addTabButton");
+  const editTabsList = document.getElementById("editTabsList");
+  let tabs = [];
   let currentEditIndex = null;
 
   // Function to load and display moods
@@ -51,39 +58,22 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Listen for messages to refresh the mood list
-  chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  chrome.runtime.onMessage.addListener(function (message) {
     if (message.type === "refreshMoods") {
       loadMoods();
     }
   });
 
   // Function to open the edit modal
-  function openEditModal(index, moods) {
+  function openEditModal(index, moods = []) {
     currentEditIndex = index;
-    const mood = moods[index];
+    const mood = index !== null ? moods[index] : { name: "", tabs: [], music: "" };
 
-    console.log("Editing mood:", mood);
-
-    const tabUrls = mood.tabs.map((tab) => {
-      if (typeof tab === "object" && tab !== null) {
-        console.log("Tab object:", tab);
-        return tab.url;
-      } else if (typeof tab === "string") {
-        console.log("Tab is a string:", tab);
-        return tab;
-      } else {
-        console.warn("Tab is neither an object nor a string:", tab);
-        return "";
-      }
-    });
-    console.log("Tabs before transformation:", tabUrls);
-
-    const tabUrlsToDisplay = tabUrls.join(", ");
-    console.log("Tab URLs to be displayed in form:", tabUrlsToDisplay);
-
-    document.getElementById("editMoodName").value = mood.name;
-    document.getElementById("editTabUrls").value = tabUrlsToDisplay;
-    document.getElementById("editMusicUrl").value = mood.music || "";
+    moodIdInput.value = index !== null ? mood.id : "";
+    editMoodNameInput.value = mood.name;
+    editMusicUrlInput.value = mood.music || "";
+    tabs = mood.tabs || [];
+    updateTabsList(tabs, editTabsList);
     editMoodModal.style.display = "block";
   }
 
@@ -102,12 +92,61 @@ document.addEventListener("DOMContentLoaded", function () {
   // Event listener to handle the edit form submission
   editMoodForm.addEventListener("submit", function (e) {
     e.preventDefault();
-    const newMoodName = document.getElementById("editMoodName").value;
-    const newTabUrls = document.getElementById("editTabUrls").value;
-    const newMusicUrl = document.getElementById("editMusicUrl").value;
-    console.log("New Tab URLs from form:", newTabUrls); // Add this line
 
-    editMood(currentEditIndex, newMoodName, newTabUrls, newMusicUrl, loadMoods);
-    editMoodModal.style.display = "none";
+    const moodId = moodIdInput.value;
+    const moodName = editMoodNameInput.value;
+    const musicUrl = editMusicUrlInput.value;
+    let formattedMusicUrl = musicUrl;
+    if (musicUrl && !/^https?:\/\//i.test(musicUrl)) {
+      formattedMusicUrl = "https://" + musicUrl;
+    }
+
+    const mood = {
+      id: moodId || new Date().getTime().toString(),
+      name: moodName,
+      tabs: tabs,
+      music: formattedMusicUrl,
+    };
+
+    if (currentEditIndex !== null) {
+      editMood(currentEditIndex, mood.name, mood.tabs.join(","), mood.music, () => {
+        loadMoods();
+        editMoodModal.style.display = "none"; // Close the modal
+      });
+    } else {
+      chrome.storage.local.get({ moods: [] }, function (data) {
+        let moods = data.moods || [];
+        moods.push(mood);
+        chrome.storage.local.set({ moods: moods }, function () {
+          chrome.runtime.sendMessage({
+            type: "showNotification",
+            title: "Mood Saved",
+            message: `${moodName} mood has been saved successfully!`,
+            url: chrome.runtime.getURL("src/options/options.html"),
+          });
+          editMoodModal.style.display = "none";
+          loadMoods();
+        });
+      });
+    }
+  });
+
+  // Add tab URL to the list
+  addTabButton.addEventListener("click", function () {
+    const url = editTabUrlInput.value.trim();
+    if (url) {
+      if (!/^https?:\/\//i.test(url)) {
+        tabs.push("https://" + url);
+      } else {
+        tabs.push(url);
+      }
+      updateTabsList(tabs, editTabsList);
+      editTabUrlInput.value = "";
+    }
+  });
+
+  // Handle tab actions (edit and delete)
+  editTabsList.addEventListener("click", function (event) {
+    handleTabActions(event, tabs, editTabsList);
   });
 });

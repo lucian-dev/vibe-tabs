@@ -35,6 +35,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
+// Function to create dynamic context menu
+function createContextMenu() {
+  chrome.contextMenus.removeAll(() => {
+    chrome.storage.local.get("moods", (data) => {
+      const moods = data.moods || [];
+      moods.forEach((mood, index) => {
+        chrome.contextMenus.create({
+          id: `addToMood-${index}`,
+          title: `Add to ${mood.name}`,
+          contexts: ["page", "selection", "link"],
+        });
+      });
+    });
+  });
+}
+
 // Listener for extension installation or update events
 chrome.runtime.onInstalled.addListener(() => {
   console.log("VibeTabs Extension Installed and Updated");
@@ -47,12 +63,14 @@ chrome.runtime.onInstalled.addListener(() => {
     });
   });
 
-  // Create context menu item
-  chrome.contextMenus.create({
-    id: "addToMood",
-    title: "Add to Mood",
-    contexts: ["page", "selection", "link"],
-  });
+  createContextMenu(); // Create the context menu when the extension is installed
+});
+
+// Listener for storage changes to update context menu
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  if (namespace === "local" && changes.moods) {
+    createContextMenu(); // Update the context menu when moods change
+  }
 });
 
 // Listener for the daily alarm to prompt the user
@@ -74,15 +92,17 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 // Listener for context menu click events
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId === "addToMood") {
-    // Save the current tab information to local storage
-    chrome.storage.local.set({ tabToAdd: tab.url }, function () {
-      console.log("Tab URL saved to storage:", tab.url);
-      // Open mood selection page
-      chrome.tabs.create({
-        url: chrome.runtime.getURL("src/selected/moodSelect.html"),
-        active: true,
+  const moodIndex = info.menuItemId.split("-")[1];
+  chrome.storage.local.get("moods", (data) => {
+    const moods = data.moods || [];
+    if (moods[moodIndex]) {
+      moods[moodIndex].tabs.push(tab.url);
+      chrome.storage.local.set({ moods: moods }, () => {
+        console.log(`Tab added to ${moods[moodIndex].name} mood!`);
+        showNotification("Tab Added", `Tab added to ${moods[moodIndex].name} mood!`, tab.url);
+        // Send a message to the options page to refresh the moods list
+        chrome.runtime.sendMessage({ type: "refreshMoods" });
       });
-    });
-  }
+    }
+  });
 });

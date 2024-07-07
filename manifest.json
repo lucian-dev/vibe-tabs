@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "VibeTabs",
-  "version": "1.4",
+  "version": "1.5",
   "description": "Organize your browsing with mood-based setups, including custom tab groups and background music for enhanced productivity.",
   "permissions": ["storage", "activeTab", "alarms", "notifications", "contextMenus"],
   "host_permissions": ["http://*/*", "https://*/*"],
@@ -21,11 +21,5 @@
     "48": "assets/icons/icon48.png",
     "128": "assets/icons/icon128.png"
   },
-  "options_page": "src/options/options.html",
-  "web_accessible_resources": [
-    {
-      "resources": ["src/selected/moodSelect.html", "src/selected/moodSelect.js"],
-      "matches": ["<all_urls>"]
-    }
-  ]
+  "options_page": "src/options/options.html"
 }

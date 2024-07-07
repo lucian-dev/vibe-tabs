@@ -233,3 +233,45 @@ export function deactivateMood(callback) {
     }
   });
 }
+
+// Function to save a mood to local storage
+export function saveMood(mood, callback) {
+  chrome.storage.local.get({ moods: [] }, function (data) {
+    const moods = data.moods || [];
+    moods.push(mood);
+    chrome.storage.local.set({ moods: moods }, function () {
+      callback();
+    });
+  });
+}
+
+// Function to update the displayed list of tabs
+export function updateTabsList(tabs, tabsList) {
+  tabsList.innerHTML = "";
+  tabs.forEach((tab, index) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+        <span>${tab}</span>
+        <div class="action-buttons">
+          <button class="edit-button" data-index="${index}">Edit</button>
+          <button class="delete-button" data-index="${index}">Delete</button>
+        </div>
+      `;
+    tabsList.appendChild(li);
+  });
+}
+
+export function handleTabActions(event, tabs, tabsList) {
+  const target = event.target;
+  const index = target.getAttribute("data-index");
+  if (target.classList.contains("edit-button")) {
+    const newUrl = prompt("Edit URL:", tabs[index]);
+    if (newUrl) {
+      tabs[index] = newUrl;
+      updateTabsList(tabs, tabsList);
+    }
+  } else if (target.classList.contains("delete-button")) {
+    tabs.splice(index, 1);
+    updateTabsList(tabs, tabsList);
+  }
+}

@@ -93,3 +93,15 @@
   background-color: #4a90e2;
   color: #ffffff;
 }
+
+.row-tabs {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  input {
+    width: 80%;
+  }
+  button {
+    width: 20%;
+  }
+}

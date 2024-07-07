@@ -1,8 +1,14 @@
+import { saveMood, updateTabsList, handleTabActions } from "../helpers/moodHelpers.js";
+
 document.addEventListener("DOMContentLoaded", function () {
   const createMoodButton = document.getElementById("createMood");
   const moodForm = document.getElementById("moodForm");
   const moodCreationForm = document.getElementById("moodCreationForm");
   const existingMoodsDiv = document.getElementById("existingMoods");
+  const addTabButton = document.getElementById("addTabButton");
+  const tabUrlInput = document.getElementById("tabUrl");
+  const tabsList = document.getElementById("tabsList");
+  let tabs = [];
 
   // Show the mood creation form when the "Create New Mood" button is clicked
   createMoodButton.addEventListener("click", function () {
@@ -24,19 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Get the values from the form fields
     const moodName = document.getElementById("moodName").value;
-    let tabUrls = document
-      .getElementById("tabUrls")
-      .value.split(",")
-      .map((url) => url.trim());
     const musicUrl = document.getElementById("musicUrl").value;
-
-    // Ensure each tab URL starts with http or https
-    tabUrls = tabUrls.map((url) => {
-      if (!/^https?:\/\//i.test(url)) {
-        return "https://" + url;
-      }
-      return url;
-    });
 
     // Ensure the music URL starts with http or https if provided
     let formattedMusicUrl = musicUrl;
@@ -47,29 +41,43 @@ document.addEventListener("DOMContentLoaded", function () {
     // Create a mood object with the form values
     const mood = {
       name: moodName,
-      tabs: tabUrls,
+      tabs: tabs,
       music: formattedMusicUrl,
     };
 
-    // Save the new mood to local storage
-    chrome.storage.local.get({ moods: [] }, function (data) {
-      const moods = data.moods || [];
-      moods.push(mood); // Add the new mood to the list
-
-      // Save the updated list of moods back to Chrome's local storage
-      chrome.storage.local.set({ moods: moods }, function () {
-        // Show a notification mood saved
-        chrome.runtime.sendMessage({
-          type: "showNotification",
-          title: "Mood Saved",
-          message: `${moodName} mood has been saved successfully!`,
-          url: chrome.runtime.getURL("src/options/options.html"),
-        });
-        // Reset the form fields
-        moodCreationForm.reset();
-        // Redirect to the options page
-        window.location.href = chrome.runtime.getURL("src/options/options.html");
+    saveMood(mood, () => {
+      // Show a notification mood saved
+      chrome.runtime.sendMessage({
+        type: "showNotification",
+        title: "Mood Saved",
+        message: `${moodName} mood has been saved successfully!`,
+        url: chrome.runtime.getURL("src/options/options.html"),
       });
+      // Reset the form fields
+      moodCreationForm.reset();
+      tabs = []; // Reset tabs list
+      updateTabsList(tabs, tabsList); // Clear the displayed list
+      // Redirect to the options page
+      window.location.href = chrome.runtime.getURL("src/options/options.html");
     });
+  });
+
+  // Add tab URL to the list
+  addTabButton.addEventListener("click", function () {
+    const url = tabUrlInput.value.trim();
+    if (url) {
+      if (!/^https?:\/\//i.test(url)) {
+        tabs.push("https://" + url);
+      } else {
+        tabs.push(url);
+      }
+      updateTabsList(tabs, tabsList);
+      tabUrlInput.value = "";
+    }
+  });
+
+  // Handle tab actions (edit and delete)
+  tabsList.addEventListener("click", function (event) {
+    handleTabActions(event, tabs, tabsList);
   });
 });
