@@ -20,6 +20,15 @@ document.addEventListener("DOMContentLoaded", function () {
         deactivateMoodButton.style.display = "none";
       }
 
+      // Conditionally show the create new mood button
+      if (moods.length === 0) {
+        createNewMoodButton.style.display = "inline-flex";
+        openOptionsButton.style.display = "none";
+      } else {
+        createNewMoodButton.style.display = "none";
+        openOptionsButton.style.display = "inline-flex";
+      }
+
       // Display moods using the helper function
       displayMoods(
         moods,

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "VibeTabs",
-  "version": "1.5",
+  "version": "1.6",
   "description": "Organize your browsing with mood-based setups, including custom tab groups and background music for enhanced productivity.",
   "permissions": ["storage", "activeTab", "alarms", "notifications", "contextMenus"],
   "host_permissions": ["http://*/*", "https://*/*"],

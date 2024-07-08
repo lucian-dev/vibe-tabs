@@ -51,7 +51,7 @@ VibeTabs does not collect, store, or transmit any personal data from users.
 
 ## Support
 
-For support, visit our [Support Page](https://lucian-web.dev).
+For support, visit [Support Page](https://lucian-web.dev).
 
 ## License
 

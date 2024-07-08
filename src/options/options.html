@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
   </head>
   <body>
-    <div class="ya-wrapper">
-      <div class="background-overlay"></div>
+    <div class="background-overlay"></div>
+    <main class="ya-wrapper">
       <div class="container">
         <header>
           <img src="../../assets/icons/Icon128.png" alt="VibeTabs Logo" class="logo" />
@@ -19,9 +19,22 @@
         <section class="mood-list" id="moodList">
           <!-- List to display saved moods -->
         </section>
-        <footer>
+        <div class="mood-actions">
           <button id="createNewMood" class="primary-button"><i class="fas fa-plus"></i> Create New Mood</button>
           <button id="deactivateMood" class="secondary-button deactivate-btn"><i class="fas fa-times"></i> Deactivate Mood</button>
+        </div>
+        <footer class="footer">
+          <p>
+            <a href="https://lucian-web.dev/contact" target="_blank">Support</a> |
+            <a href="../faq/faq.html">FAQ</a>
+          </p>
+          <p class="signature">
+            <a href="https://www.paypal.com/donate/?hosted_button_id=D3QD5HLUY2WDS" target="_blank">
+              <i class="fas fa-coffee"></i>
+              Buy me a coffee
+            </a>
+          </p>
+          <p class="copy">&copy; 2024 VibeTabs</p>
         </footer>
       </div>
       <!-- Edit/Create Mood Modal -->
@@ -39,7 +52,7 @@
               <label for="editTabUrl">Add Tab URL:</label>
               <div class="row-tabs">
                 <input type="url" id="editTabUrl" name="editTabUrl" />
-                <button class="edit-button" type="button" id="addTabButton">Add Tab</button>
+                <button class="edit-button" type="button" id="addTabButton">Add URL</button>
               </div>
             </div>
             <ul id="editTabsList"></ul>
@@ -51,7 +64,7 @@
           </form>
         </div>
       </div>
-    </div>
+    </main>
     <script type="module" src="options.js"></script>
   </body>
 </html>
