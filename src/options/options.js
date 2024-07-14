@@ -1,4 +1,4 @@
-import { displayMoods, editMood, deleteMood, activateMood, deactivateMood, updateTabsList, handleTabActions } from "../helpers/moodHelpers.js";
+import { displayMoods, editMood, deleteMood, activateMood, deactivateMood, updateTabsList, handleTabActions, isValidUrl } from "../helpers/moodHelpers.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   const createNewMoodButton = document.getElementById("createNewMood");
@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const editMoodNameInput = document.getElementById("editMoodName");
   const editMusicUrlInput = document.getElementById("editMusicUrl");
   const editTabUrlInput = document.getElementById("editTabUrl");
+  const tabUrlError = document.getElementById("tabUrlError");
   const addTabButton = document.getElementById("addTabButton");
   const editTabsList = document.getElementById("editTabsList");
   let tabs = [];
@@ -80,12 +81,16 @@ document.addEventListener("DOMContentLoaded", function () {
   // Event listener to close the edit modal
   closeModalButton.addEventListener("click", function () {
     editMoodModal.style.display = "none";
+    editTabUrlInput.classList.remove("error");
+    tabUrlError.style.display = "none";
   });
 
   // Event listener to close the modal when clicking outside of it
   window.addEventListener("click", function (event) {
     if (event.target === editMoodModal) {
       editMoodModal.style.display = "none";
+      editTabUrlInput.classList.remove("error");
+      tabUrlError.style.display = "none";
     }
   });
 
@@ -134,7 +139,13 @@ document.addEventListener("DOMContentLoaded", function () {
   // Add tab URL to the list
   addTabButton.addEventListener("click", function () {
     const url = editTabUrlInput.value.trim();
-    if (url) {
+    if (!url || !isValidUrl(url)) {
+      editTabUrlInput.classList.add("error");
+      tabUrlError.style.display = "block";
+      editTabUrlInput.focus();
+    } else {
+      editTabUrlInput.classList.remove("error");
+      tabUrlError.style.display = "none";
       if (!/^https?:\/\//i.test(url)) {
         tabs.push("https://" + url);
       } else {
@@ -142,6 +153,14 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       updateTabsList(tabs, editTabsList);
       editTabUrlInput.value = "";
+    }
+  });
+
+  // Real-time validation feedback
+  editTabUrlInput.addEventListener("input", () => {
+    if (tabUrlError.style.display === "block") {
+      editTabUrlInput.classList.remove("error");
+      tabUrlError.style.display = "none";
     }
   });
 

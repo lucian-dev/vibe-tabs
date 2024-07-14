@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>What's your mood today?</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" />
-    <link rel="stylesheet" href="../../main.css" />
+    <link rel="stylesheet" href="../../dist/css/main.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
   </head>
   <body>
@@ -34,6 +34,7 @@
                   <input type="url" id="tabUrl" name="tabUrl" />
                   <button class="edit-button" type="button" id="addTabButton">Add URL</button>
                 </div>
+                <span id="tabUrlError" class="error-message" style="display: none; color: red">Please enter a valid URL.</span>
               </div>
               <ul id="tabsList"></ul>
               <div class="form-group">
@@ -63,6 +64,6 @@
         </footer>
       </div>
     </main>
-    <script type="module" src="welcome.js"></script>
+    <script type="module" src="../../dist/js/welcome.js"></script>
   </body>
 </html>

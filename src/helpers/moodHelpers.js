@@ -275,3 +275,15 @@ export function handleTabActions(event, tabs, tabsList) {
     updateTabsList(tabs, tabsList);
   }
 }
+
+export function isValidUrl(url) {
+  const pattern = new RegExp(
+    "^(https?:\\/\\/)?" + // protocol
+      "(([a-zA-Z\\d]([a-zA-Z\\d-]*[a-zA-Z\\d])*)\\.?)+\\.[a-zA-Z]{2,}" + // domain name with extension
+      "(\\:\\d+)?(\\/[-a-zA-Z\\d%_.~+]*)*" + // port and path
+      "(\\?[;&a-zA-Z\\d%_.~+=-]*)?" + // query string
+      "(\\#[-a-zA-Z\\d_]*)?$",
+    "i"
+  ); // fragment locator
+  return pattern.test(url);
+}

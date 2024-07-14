@@ -1,4 +1,4 @@
-import { saveMood, updateTabsList, handleTabActions } from "../helpers/moodHelpers.js";
+import { saveMood, updateTabsList, handleTabActions, isValidUrl } from "../helpers/moodHelpers.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   const createMoodButton = document.getElementById("createMood");
@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const existingMoodsDiv = document.getElementById("existingMoods");
   const addTabButton = document.getElementById("addTabButton");
   const tabUrlInput = document.getElementById("tabUrl");
+  const tabUrlError = document.getElementById("tabUrlError");
   const tabsList = document.getElementById("tabsList");
   let tabs = [];
 
@@ -65,7 +66,13 @@ document.addEventListener("DOMContentLoaded", function () {
   // Add tab URL to the list
   addTabButton.addEventListener("click", function () {
     const url = tabUrlInput.value.trim();
-    if (url) {
+    if (!url || !isValidUrl(url)) {
+      tabUrlInput.classList.add("error");
+      tabUrlError.style.display = "block";
+      tabUrlInput.focus();
+    } else {
+      tabUrlInput.classList.remove("error");
+      tabUrlError.style.display = "none";
       if (!/^https?:\/\//i.test(url)) {
         tabs.push("https://" + url);
       } else {
@@ -73,6 +80,14 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       updateTabsList(tabs, tabsList);
       tabUrlInput.value = "";
+    }
+  });
+
+  // Real-time validation feedback
+  tabUrlInput.addEventListener("input", () => {
+    if (tabUrlError.style.display === "block") {
+      tabUrlInput.classList.remove("error");
+      tabUrlError.style.display = "none";
     }
   });
 

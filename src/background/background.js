@@ -1,3 +1,5 @@
+import { isValidUrl } from "../helpers/moodHelpers";
+
 // Function to show notifications
 function showNotification(title, message, url) {
   chrome.notifications.create(
@@ -93,16 +95,26 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 // Listener for context menu click events
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   const moodIndex = info.menuItemId.split("-")[1];
+  const url = tab.url.trim();
+
+  // Validate URL before proceeding
+  if (!isValidUrl(url)) {
+    showNotification("Invalid URL", "The URL of the current tab is not valid and cannot be added.");
+    return;
+  }
+
   chrome.storage.local.get("moods", (data) => {
     const moods = data.moods || [];
     if (moods[moodIndex]) {
-      moods[moodIndex].tabs.push(tab.url);
+      moods[moodIndex].tabs.push(url);
       chrome.storage.local.set({ moods: moods }, () => {
         console.log(`Tab added to ${moods[moodIndex].name} mood!`);
         showNotification("Tab Added", `Tab added to ${moods[moodIndex].name} mood!`, tab.url);
         // Send a message to the options page to refresh the moods list
         chrome.runtime.sendMessage({ type: "refreshMoods" });
       });
+    } else {
+      showNotification("Error", "Selected mood does not exist.", tab.url);
     }
   });
 });
